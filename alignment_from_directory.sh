@@ -56,8 +56,11 @@ done
 
 #looping through files that are found with globbing
 #the files could be in any order. it just finds the first R1, changes to R2, and moves on to the next available R1
-
-for r1_file in $fastQ_directory/*_R1_*.fastq.gz
+for directory in `find $fastQ_directory -mindepth 1 -type d`
+do
+cp $options $directory
+echo "test"
+for r1_file in $directory/*_R1_*.fastq.gz
 do
     if [ -f "$r1_file" ]
     then
@@ -77,9 +80,6 @@ do
             if [ "$organism" == "Mouse" ]
             then
             #alignment code
-            echo $organism
-            echo $sequencing_type
-
             mrpe -o $options "$r1_file" "$r2_file"
             fi
 
@@ -111,4 +111,5 @@ do
     echo "Error: File "$r1_file" not found" >&2
     exit
     fi
+done
 done
